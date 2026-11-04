@@ -1,0 +1,342 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&display=swap");
+
+/* ---------- Design tokens ---------- */
+:root {
+  color-scheme: light dark;
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --bg: #edeff6;
+  --dot: rgb(20 23 43 / 0.1);
+  --surface: #ffffff;
+  --surface-2: #f5f6fc;
+  --field: #ffffff;
+  --ink: #14172b;
+  --ink-soft: #565c7a;
+  --line: #d9dcec;
+
+  --accent: #4338f0;
+  --accent-hover: #372cd6;
+  --accent-2: #12b5a6;
+  --on-accent: #ffffff;
+
+  --shadow: 0 1px 2px rgb(20 23 43 / 0.04), 0 28px 56px -28px rgb(48 44 140 / 0.28);
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1020;
+    --dot: rgb(236 238 250 / 0.08);
+    --surface: #171a30;
+    --surface-2: #1e2240;
+    --field: #10132a;
+    --ink: #eceefa;
+    --ink-soft: #a3a9cc;
+    --line: #2b3058;
+
+    --accent: #9a94ff;
+    --accent-hover: #b1acff;
+    --accent-2: #4fe0cf;
+    --on-accent: #0e1020;
+
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 28px 56px -28px rgb(0 0 0 / 0.7);
+  }
+}
+
+/* Needed so the focus border can rotate smoothly */
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  padding: clamp(2rem, 7vw, 4.5rem) 1rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Quiet dot grid that fades out toward the bottom */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(var(--dot) 1px, transparent 1.5px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 75%);
+  mask-image: linear-gradient(to bottom, #000, transparent 75%);
+  pointer-events: none;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* ---------- Layout ---------- */
+.main-heading,
+.container {
+  width: min(100%, 44rem);
+  margin-inline: auto;
+}
+
+.main-heading {
+  margin-block: 0 1.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 1rem + 5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.container {
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  animation: rise 0.6s var(--ease) both;
+}
+
+h2 {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+hr {
+  height: 1px;
+  margin-block: 2.25rem;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--line) 15%, var(--line) 85%, transparent);
+}
+
+/* ---------- Forms ---------- */
+form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--field), var(--field)) padding-box,
+    linear-gradient(var(--line), var(--line)) border-box;
+  transition: box-shadow 0.25s var(--ease);
+}
+
+#emailForm {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+}
+
+/* The one memorable moment: a border that orbits while you type */
+form:focus-within {
+  background:
+    linear-gradient(var(--field), var(--field)) padding-box,
+    conic-gradient(from var(--angle), var(--accent), var(--accent-2), var(--accent)) border-box;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 16%, transparent);
+  animation: orbit 3.5s linear infinite;
+}
+
+input,
+textarea {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0.7rem 1rem;
+  font: inherit;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+
+textarea {
+  display: block;
+  min-height: 9rem;
+  max-height: 26rem;
+  resize: vertical;
+  line-height: 1.6;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+@supports (field-sizing: content) {
+  textarea {
+    field-sizing: content;
+  }
+}
+
+::placeholder {
+  color: var(--ink-soft);
+  opacity: 0.85;
+}
+
+/* ---------- Buttons ---------- */
+button {
+  flex-shrink: 0;
+  appearance: none;
+  padding: 0.7rem 1.4rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--on-accent);
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    0 8px 18px -8px color-mix(in srgb, var(--accent) 80%, transparent);
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s var(--ease),
+    box-shadow 0.2s ease;
+}
+
+#emailForm button {
+  align-self: flex-end;
+}
+
+button:hover {
+  background: var(--accent-hover);
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---------- Loading state ---------- */
+#ans-loading,
+#summary-loading {
+  margin: 1rem 0 0;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+#ans-loading::before,
+#summary-loading::before {
+  content: "";
+  display: inline-block;
+  width: 0.95em;
+  height: 0.95em;
+  margin-right: 0.6em;
+  vertical-align: -0.14em;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+/* ---------- Results ---------- */
+#answer,
+#summary {
+  max-width: 70ch;
+  margin: 1.25rem 0 0;
+  padding: 1rem 1.2rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px var(--radius-md) var(--radius-md) 6px;
+  animation: reveal 0.35s var(--ease) both;
+}
+
+/* Hide the empty result boxes until there is text */
+#answer:empty,
+#summary:empty {
+  display: none;
+}
+
+/* ---------- Motion ---------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 540px) {
+  #askForm {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+  }
+
+  button {
+    width: 100%;
+  }
+}
